@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      form {
+        padding: 15px;
+        border: 1px solid black;
+        width: 500px;
+        height: 500px;
+        margin-top: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <form id="form">
+        <br /><br /><br />
+        Enter the name :
+        <input type="text" id="name" name="name" /><br /><br /><br />
+        Enter the description :
+        <input
+          type="text"
+          id="description"
+          name="description"
+        /><br /><br /><br />
+        Enter the preparationTime :
+        <input
+          type="text"
+          id="preparationTime"
+          name="preparationTime"
+        /><br /><br /><br />
+        Enter the cookingTime :
+        <input
+          type="number"
+          id="cookingTime"
+          name="cookingTime"
+        /><br /><br /><br />
+        Enter the imageUrl :
+        <input type="url" id="imageUrl" name="imageUrl" /><br /><br /><br />
+        Enter the country :
+        <input type="text" id="country" name="country" /><br /><br /><br />
+        Enter the veg :
+        <input type="text" id="veg" name="veg" /><br /><br /><br />
+        <input type="submit" value="Add recipie" />
+      </form>
+    </center>
+
+    <script>
+      let id;
+      fetch("http://localhost:8090/recipe/all")
+        .then((res) => res.json())
+        .then((res) => id = res.length)
+        .catch((err) => console.log(err));
+      const addData = (e) => {
+        const productDetails = {
+          name: document.getElementById("name").value,
+          description: document.getElementById("description").value,
+          preparationTime: document.getElementById("preparationTime").value,
+          cookingTime: document.getElementById("cookingTime").value,
+          imageUrl: document.getElementById("imageUrl").value,
+          country: document.getElementById("country").value,
+          veg: document.getElementById("veg").value,
+          id:id + 1
+        };
+        e.preventDefault();
+        fetch("http://localhost:8090/recipie/post", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(productDetails),
+        })
+          .then((res) => {
+            window.location.pathname = "/recipe/all";
+            alert("Added Successfully");
+          })
+          .catch(() => alert("There is sonething wrong"));
+      };
+      document
+        .getElementById("form")
+        .addEventListener("submit", (e) => addData(e));
+    </script>
+  </body>
+</html>

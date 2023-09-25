@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: bisque;
+      }
+
+      #parent div {
+        width: 31%;
+        margin: 15px;
+        padding: 15px;
+        box-shadow: 0px 0px 15px black;
+        transition: all 0.5s;
+    }
+
+      #parent div:hover {
+        transform: scale(103%);
+      }
+
+      #parent img {
+        width: 100%;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="parent" class="row"></div>
+    <script>
+      const getData = (data) => {
+        data.map((ele, i) => {
+          const parent = document.getElementById("parent");
+          let name = document.createElement("h1");
+          name.innerHTML = ele.name;
+          let description = document.createElement("p");
+          description.innerHTML = ele.description;
+          let preparationTime = document.createElement("h2");
+          preparationTime.innerHTML = ele.preparationTime;
+          let cookingTime = document.createElement("span");
+          cookingTime.innerHTML = ele.cookingTime;
+          let imageUrl = document.createElement("img");
+          imageUrl.src = ele.imageUrl;
+          let country = document.createElement("h2");
+          country.innerHTML = ele.country;
+          let veg = document.createElement("h3");
+          veg.innerHTML = ele.veg;
+          let id = document.createElement("span");
+          id.innerHTML = ele.id;
+          let div = document.createElement("div");
+          div.append(
+            name,
+            description,
+            preparationTime,
+            cookingTime,
+            imageUrl,
+            country,
+            veg,
+            id
+          );
+          parent.append(div);
+        });
+      };
+
+      fetch("http://localhost:8090/recipe/all")
+        .then((res) => res.json())
+        .then((res) => getData(res))
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>
