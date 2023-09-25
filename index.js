@@ -4,6 +4,7 @@ const cors = require("cors");
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
+const check = require("./middleware");
 
 let initialRecipe = [
   {
@@ -90,7 +91,7 @@ server.get("/add", (req, res) => {
   res.sendFile(__dirname + "/recipie.html");
 });
 
-server.post("/recipie/post", (req, res) => {
+server.post("/recipie/post", check, (req, res) => {
   const productDetails = {
     name: req.body.name,
     description: req.body.description,

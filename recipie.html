@@ -52,7 +52,7 @@
       let id;
       fetch("http://localhost:8090/recipe/all")
         .then((res) => res.json())
-        .then((res) => id = res.length)
+        .then((res) => (id = res.length))
         .catch((err) => console.log(err));
       const addData = (e) => {
         const productDetails = {
@@ -63,7 +63,7 @@
           imageUrl: document.getElementById("imageUrl").value,
           country: document.getElementById("country").value,
           veg: document.getElementById("veg").value,
-          id:id + 1
+          id: id + 1,
         };
         e.preventDefault();
         fetch("http://localhost:8090/recipie/post", {
@@ -72,10 +72,13 @@
           body: JSON.stringify(productDetails),
         })
           .then((res) => {
+            if (res.status == 404) {
+              return alert("All fields are required");
+            }
             window.location.pathname = "/recipe/all";
             alert("Added Successfully");
           })
-          .catch(() => alert("There is sonething wrong"));
+          .catch((err) => console.log(err));
       };
       document
         .getElementById("form")
