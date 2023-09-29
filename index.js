@@ -76,7 +76,7 @@ let initialRecipe = [
 ];
 
 server.get("/", (req, res) => {
-  res.status(200).send("<h1>Welcome to the Recipe API.</h1>");
+  res.status(200).send("welcome to the recipe api");
 });
 
 server.get("/recipe/all", (req, res) => {
@@ -88,22 +88,35 @@ server.get("/index", (req, res) => {
 });
 
 server.get("/add", (req, res) => {
-  res.sendFile(__dirname + "/recipie.html");
+  res.sendFile(__dirname + "/recipe.html");
 });
 
-server.post("/recipie/post", check, (req, res) => {
-  const productDetails = {
-    name: req.body.name,
-    description: req.body.description,
-    preparationTime: req.body.preparationTime,
-    cookingTime: req.body.cookingTime,
-    imageUrl: req.body.imageUrl,
-    country: req.body.country,
-    veg: req.body.veg,
-    id: req.body.id,
+server.post("/recipe/add", check, (req, res) => {
+  req.body.id = initialRecipe.length + 1;
+
+  initialRecipe.push(req.body);
+  res.status(200).send(initialRecipe);
+});
+
+server.patch("/recipe/update/:id", (req, res) => {
+  const indexToUpdate = initialRecipe.findIndex(
+    (recipe) => recipe.id == req.params.id
+  );
+
+  initialRecipe[indexToUpdate] = {
+    ...initialRecipe[indexToUpdate],
+    ...req.body,
   };
-  initialRecipe = [...initialRecipe, productDetails];
-  res.status(200).send("Added successfully");
+
+  res.status(200).send(initialRecipe);
+});
+
+server.delete("/recipe/delete/:id", (req, res) => {
+  const deletedData = initialRecipe.filter((ele) => ele.id != req.params.id);
+
+  initialRecipe = [...deletedData];
+
+  res.status(200).send(initialRecipe);
 });
 
 server.get("/*", (req, res) => {

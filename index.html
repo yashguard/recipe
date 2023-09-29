@@ -21,7 +21,7 @@
         padding: 15px;
         box-shadow: 0px 0px 15px black;
         transition: all 0.5s;
-    }
+      }
 
       #parent div:hover {
         transform: scale(103%);
@@ -29,6 +29,17 @@
 
       #parent img {
         width: 100%;
+      }
+
+      button {
+        display: block;
+        margin: 20px 0;
+        padding: 14px 30px;
+        background-color: black;
+        color: white;
+        font-size: 18px;
+        border: none;
+        cursor: pointer;
       }
 
       .row {
@@ -42,8 +53,29 @@
   <body>
     <div id="parent" class="row"></div>
     <script>
+      const display = () => {
+        fetch("/recipe/all")
+          .then((res) => res.json())
+          .then((res) => getData(res))
+          .catch((err) => console.log(err));
+      };
+
+      const sendData = (data) => {
+        window.location.pathname = "/add";
+        localStorage.setItem("updateData", JSON.stringify(data));
+      };
+
+      const deleteData = (data) => {
+        fetch(`/recipe/delete/${data.id}`, {
+          method: "DELETE",
+        })
+          .then(() => display())
+          .catch((err) => console.log(err));
+        window.location.reload();
+      };
+
       const getData = (data) => {
-        data.map((ele, i) => {
+        data.map((ele) => {
           const parent = document.getElementById("parent");
           let name = document.createElement("h1");
           name.innerHTML = ele.name;
@@ -61,6 +93,10 @@
           veg.innerHTML = ele.veg;
           let id = document.createElement("span");
           id.innerHTML = ele.id;
+          let update = document.createElement("button");
+          update.innerHTML = "update";
+          let remove = document.createElement("button");
+          remove.innerHTML = "delete";
           let div = document.createElement("div");
           div.append(
             name,
@@ -70,16 +106,17 @@
             imageUrl,
             country,
             veg,
-            id
+            id,
+            update,
+            remove
           );
           parent.append(div);
+
+          update.addEventListener("click", () => sendData(ele));
+          remove.addEventListener("click", () => deleteData(ele));
         });
       };
-
-      fetch("http://localhost:8090/recipe/all")
-        .then((res) => res.json())
-        .then((res) => getData(res))
-        .catch((err) => console.log(err));
+      display();
     </script>
   </body>
 </html>

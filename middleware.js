@@ -7,21 +7,19 @@ module.exports = check = (req, res, next) => {
     imageUrl,
     country,
     veg,
-    id,
   } = req.body;
 
   if (
-    !name ||
-    !description ||
-    !preparationTime ||
-    !cookingTime ||
-    !imageUrl ||
-    !country ||
-    !veg ||
-    !id
+    name ||
+    description ||
+    preparationTime ||
+    cookingTime ||
+    imageUrl ||
+    country ||
+    veg
   ) {
-    res.status(404).send("All fields are required");
-  } else {
     next();
+  } else {
+    res.status(400).send("All fields are required");
   }
 };
